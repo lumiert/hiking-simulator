@@ -10,6 +10,7 @@
 #include <GL/gl.h>
 
 #include "engine/render/FirstPersonCamera.h"
+#include "engine/scene/ObjectManager.h"
 
 class ShaderDevApp {
 private:
@@ -21,10 +22,9 @@ private:
     bool running = true;
     
     FirstPersonCamera camera;
+    SceneManager scene;
     
-    GLuint VAO = 0, VBO = 0, EBO = 0;
     GLuint shaderProgram = 0;
-    unsigned int cubeIndexCount = 0;
     
 public:
     ShaderDevApp() 
@@ -103,10 +103,8 @@ public:
             return false;
         }
         
-        // Create cube
-        if (!createCube()) {
-            return false;
-        }
+        // Load shopping cart model
+        scene.placeObject("game/assets/shared/models/shopping_cart/scene.gltf", 0.0f, 0.0f, 0.0f, 1);
         
         std::cout << "[INFO] Controls:\n";
         std::cout << "  W/A/S/D - Move camera\n";
@@ -215,92 +213,6 @@ public:
         return true;
     }
     
-    bool createCube() {
-        // Cube vertices (position + normal)
-        struct Vertex {
-            glm::vec3 position;
-            glm::vec3 normal;
-        };
-        
-        std::vector<Vertex> vertices = {
-            // Front face
-            {{ -1.0f, -1.0f,  1.0f }, {  0.0f,  0.0f,  1.0f }},
-            {{  1.0f, -1.0f,  1.0f }, {  0.0f,  0.0f,  1.0f }},
-            {{  1.0f,  1.0f,  1.0f }, {  0.0f,  0.0f,  1.0f }},
-            {{ -1.0f,  1.0f,  1.0f }, {  0.0f,  0.0f,  1.0f }},
-            
-            // Back face
-            {{ -1.0f, -1.0f, -1.0f }, {  0.0f,  0.0f, -1.0f }},
-            {{ -1.0f,  1.0f, -1.0f }, {  0.0f,  0.0f, -1.0f }},
-            {{  1.0f,  1.0f, -1.0f }, {  0.0f,  0.0f, -1.0f }},
-            {{  1.0f, -1.0f, -1.0f }, {  0.0f,  0.0f, -1.0f }},
-            
-            // Top face
-            {{ -1.0f,  1.0f, -1.0f }, {  0.0f,  1.0f,  0.0f }},
-            {{ -1.0f,  1.0f,  1.0f }, {  0.0f,  1.0f,  0.0f }},
-            {{  1.0f,  1.0f,  1.0f }, {  0.0f,  1.0f,  0.0f }},
-            {{  1.0f,  1.0f, -1.0f }, {  0.0f,  1.0f,  0.0f }},
-            
-            // Bottom face
-            {{ -1.0f, -1.0f, -1.0f }, {  0.0f, -1.0f,  0.0f }},
-            {{  1.0f, -1.0f, -1.0f }, {  0.0f, -1.0f,  0.0f }},
-            {{  1.0f, -1.0f,  1.0f }, {  0.0f, -1.0f,  0.0f }},
-            {{ -1.0f, -1.0f,  1.0f }, {  0.0f, -1.0f,  0.0f }},
-            
-            // Right face
-            {{  1.0f, -1.0f, -1.0f }, {  1.0f,  0.0f,  0.0f }},
-            {{  1.0f,  1.0f, -1.0f }, {  1.0f,  0.0f,  0.0f }},
-            {{  1.0f,  1.0f,  1.0f }, {  1.0f,  0.0f,  0.0f }},
-            {{  1.0f, -1.0f,  1.0f }, {  1.0f,  0.0f,  0.0f }},
-            
-            // Left face
-            {{ -1.0f, -1.0f, -1.0f }, { -1.0f,  0.0f,  0.0f }},
-            {{ -1.0f, -1.0f,  1.0f }, { -1.0f,  0.0f,  0.0f }},
-            {{ -1.0f,  1.0f,  1.0f }, { -1.0f,  0.0f,  0.0f }},
-            {{ -1.0f,  1.0f, -1.0f }, { -1.0f,  0.0f,  0.0f }},
-        };
-        
-        std::vector<unsigned int> indices = {
-            0, 1, 2, 2, 3, 0,      // Front
-            4, 5, 6, 6, 7, 4,      // Back
-            8, 9, 10, 10, 11, 8,   // Top
-            12, 13, 14, 14, 15, 12,// Bottom
-            16, 17, 18, 18, 19, 16,// Right
-            20, 21, 22, 22, 23, 20 // Left
-        };
-        
-        cubeIndexCount = indices.size();
-        
-        // Create VAO, VBO, EBO
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-        
-        glBindVertexArray(VAO);
-        
-        // VBO
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-        
-        // EBO
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-        
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-        glEnableVertexAttribArray(0);
-        
-        // Normal attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-        glEnableVertexAttribArray(1);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-        
-        std::cout << "[OK] Cube created with " << cubeIndexCount << " indices\n";
-        return true;
-    }
-    
     void run() {
         std::cout << "\n[*] Starting shader development loop...\n\n";
         
@@ -353,24 +265,10 @@ public:
             // Render
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
-            glUseProgram(shaderProgram);
-            
-            glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = camera.getViewMatrix();
             glm::mat4 projection = camera.getProjectionMatrix(45.0f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);
             
-            GLint modelLoc = glGetUniformLocation(shaderProgram, "model");
-            GLint viewLoc = glGetUniformLocation(shaderProgram, "view");
-            GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
-            GLint timeLoc = glGetUniformLocation(shaderProgram, "time");
-            
-            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-            glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-            glUniform1f(timeLoc, appTime);
-            
-            glBindVertexArray(VAO);
-            glDrawElements(GL_TRIANGLES, cubeIndexCount, GL_UNSIGNED_INT, 0);
+            scene.renderAll(shaderProgram, view, projection, appTime);
             
             SDL_GL_SwapWindow(window);
             
@@ -388,9 +286,7 @@ public:
     }
     
     void cleanup() {
-        if (VAO) glDeleteVertexArrays(1, &VAO);
-        if (VBO) glDeleteBuffers(1, &VBO);
-        if (EBO) glDeleteBuffers(1, &EBO);
+        scene.cleanup();
         if (shaderProgram) glDeleteProgram(shaderProgram);
         
         if (glContext) {
