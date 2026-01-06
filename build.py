@@ -158,10 +158,8 @@ class BuildSystem:
             print("[WARNING] DLL deployment had issues, continuing anyway...")
         
         targets = [
-            ("main_graphics.cpp", "hiking.exe"),
-            ("main_test.cpp", "test.exe"),
-            ("main_sdl_test.cpp", "sdl_test.exe"),
-            ("main_firstperson.cpp", "firstperson.exe"),
+            ("main_firstperson.cpp", "hiking.exe"),
+            ("main_shaders.cpp", "shaders.exe"),
         ]
         
         success = True
@@ -174,11 +172,8 @@ class BuildSystem:
             print(" BUILD SUCCESSFUL!")
             print("="*60)
             print("\nRun executables:")
-            print("  > hiking.exe         (main application)")
-            print("  > test.exe           (test version)")
-            print("  > sdl_test.exe       (SDL2 only test - no OpenGL)")
-            print("  > firstperson.exe    (First-person camera demo)")
-            print("  > python demo.py     (Python demo)")
+            print("  > hiking.exe         (main game)")
+            print("  > shaders.exe        (shader development tool)")
             print()
         
         return success
@@ -187,7 +182,7 @@ class BuildSystem:
         """Clean build artifacts"""
         print(f"\n[*] Cleaning build files...")
         
-        targets = ["hiking.exe", "test.exe", "sdl_test.exe", "firstperson.exe", "SDL2.dll", "glew32.dll"]
+        targets = ["hiking.exe", "shaders.exe", "SDL2.dll", "glew32.dll"]
         for target in targets:
             path = self.project_root / target
             if path.exists():
