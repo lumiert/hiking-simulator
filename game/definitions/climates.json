@@ -1,0 +1,31 @@
+{
+  "climates": [
+    {
+      "id": "temperate",
+      "name": "Temperate",
+      "description": "Pleasant forests with moderate weather",
+      "temperature": 15.0,
+      "humidity": 60.0,
+      "vegetation": ["oak", "pine", "birch"],
+      "creatures": ["deer", "rabbit", "bird"]
+    },
+    {
+      "id": "alpine",
+      "name": "Alpine",
+      "description": "High altitude mountain terrain",
+      "temperature": 2.0,
+      "humidity": 40.0,
+      "vegetation": ["pine", "spruce"],
+      "creatures": ["eagle", "mountain_goat"]
+    },
+    {
+      "id": "tropical",
+      "name": "Tropical",
+      "description": "Lush rainforest environment",
+      "temperature": 28.0,
+      "humidity": 85.0,
+      "vegetation": ["palm", "fern", "mahogany"],
+      "creatures": ["parrot", "monkey", "snake"]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "items": [
+    {
+      "id": "water_bottle",
+      "name": "Water Bottle",
+      "description": "Stay hydrated on your hike",
+      "weight": 0.5,
+      "maxQuantity": 1
+    },
+    {
+      "id": "compass",
+      "name": "Compass",
+      "description": "Navigate with confidence",
+      "weight": 0.1,
+      "maxQuantity": 1
+    },
+    {
+      "id": "backpack",
+      "name": "Backpack",
+      "description": "Carry your essentials",
+      "weight": 1.0,
+      "maxQuantity": 1
+    },
+    {
+      "id": "map",
+      "name": "Map",
+      "description": "Navigate the terrain",
+      "weight": 0.2,
+      "maxQuantity": 1
+    },
+    {
+      "id": "energy_bar",
+      "name": "Energy Bar",
+      "description": "Quick snack for energy",
+      "weight": 0.1,
+      "maxQuantity": 10
+    }
+  ]
+}
