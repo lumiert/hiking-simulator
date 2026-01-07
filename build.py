@@ -158,7 +158,7 @@ class BuildSystem:
             print("[WARNING] DLL deployment had issues, continuing anyway...")
         
         targets = [
-            ("main_firstperson.cpp", "hiking.exe"),
+            ("main.cpp", "hiking.exe"),
             ("main_shaders.cpp", "shaders.exe"),
         ]
         
