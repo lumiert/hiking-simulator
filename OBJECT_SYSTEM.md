@@ -13,7 +13,7 @@ int placeObject(const std::string& modelPath, float x, float y, float z, int col
 ```
 
 **Parâmetros:**
-- `modelPath` (string): Caminho para o arquivo GLTF (ex: `"game/assets/shared/models/shopping_cart/scene.gltf"`)
+- `modelPath` (string): Caminho para o arquivo GLB (ex: `"game/assets/shared/models/old_television.glb"`)
 - `x, y, z` (float): Posição inicial do objeto no mundo
 - `collisionType` (int): Tipo de colisão:
   - `0` = Sem colisão
@@ -24,30 +24,30 @@ int placeObject(const std::string& modelPath, float x, float y, float z, int col
 
 ## Exemplos de Uso
 
-### Exemplo 1: Colocar um carrinho de compras
+### Exemplo 1: Colocar uma TV antiga
 ```cpp
 // No código do shaders.exe ou do jogo
-int cartId = scene.placeObject("game/assets/shared/models/shopping_cart/scene.gltf", 0.0f, 0.0f, 0.0f, 1);
+int tvId = scene.placeObject("game/assets/shared/models/old_television.glb", 0.0f, 0.0f, 0.0f, 1);
 ```
 
 ### Exemplo 2: Múltiplos objetos
 ```cpp
-// Carrinho no centro
-int cart = scene.placeObject("game/assets/shared/models/shopping_cart/scene.gltf", 0.0f, 0.0f, 0.0f, 1);
+// TV no centro
+int tv = scene.placeObject("game/assets/shared/models/old_television.glb", 0.0f, 0.0f, 0.0f, 1);
 
-// Carrinho sem colisão
-int cart2 = scene.placeObject("game/assets/shared/models/shopping_cart/scene.gltf", 5.0f, 0.0f, 5.0f, 0);
+// Outra TV sem colisão
+int tv2 = scene.placeObject("game/assets/shared/models/old_television.glb", 5.0f, 0.0f, 5.0f, 0);
 
 // Objeto dinâmico
-int dynamicCart = scene.placeObject("game/assets/shared/models/shopping_cart/scene.gltf", -5.0f, 0.0f, -5.0f, 3);
+int dynamicTv = scene.placeObject("game/assets/shared/models/old_television.glb", -5.0f, 0.0f, -5.0f, 3);
 ```
 
 ### Exemplo 3: Diferentes modelos
 ```cpp
 // Assumindo que você tem múltiplos modelos em assets
-int obj1 = scene.placeObject("game/assets/shared/models/model_a/scene.gltf", 0.0f, 0.0f, 0.0f, 1);
-int obj2 = scene.placeObject("game/assets/shared/models/model_b/scene.gltf", 10.0f, 0.0f, 0.0f, 1);
-int obj3 = scene.placeObject("game/assets/shared/models/model_c/scene.gltf", -10.0f, 0.0f, 0.0f, 0);
+int obj1 = scene.placeObject("game/assets/environment/vegetation/oak_tree.glb", 0.0f, 0.0f, 0.0f, 1);
+int obj2 = scene.placeObject("game/assets/shared/models/old_television.glb", 10.0f, 0.0f, 0.0f, 1);
+int obj3 = scene.placeObject("game/assets/environment/sky/sun.glb", -10.0f, 0.0f, 0.0f, 0);
 ```
 
 ## Funções de Suporte
@@ -99,7 +99,7 @@ struct SceneObject {
     glm::vec3 rotation;               // Rotação em radianos (Euler)
     glm::vec3 scale;                  // Escala (1.0 = tamanho original)
     CollisionType collisionType;      // Tipo de colisão
-    GLTFMeshData mesh;                // Dados da malha
+    GLBMeshData mesh;                 // Dados da malha
     
     glm::mat4 getModelMatrix() const; // Obtém matriz de transformação
 };
@@ -107,13 +107,13 @@ struct SceneObject {
 
 ## Performance
 
-- **Cache de Modelos**: Os modelos GLTF são carregados uma vez e reutilizados (cache automático)
+- **Cache de Modelos**: Os modelos GLB são carregados uma vez e reutilizados (cache automático)
 - **Renderização em Lote**: Todos os objetos são renderizados em um único render call
 - **Eficiência de Memória**: Múltiplas instâncias do mesmo modelo compartilham dados de mesh
 
 ## Limitações Atuais
 
-1. **Parser GLTF Simplificado**: Atualmente carrega apenas estrutura básica. Para modelos complexos, usa fallback de cubo
+1. **Parser GLB Simplificado**: Atualmente carrega apenas estrutura básica. Para modelos complexos, usa fallback de cubo
 2. **Sem Física Integrada**: Os tipos de colisão (1, 3) são apenas flags para uso futuro
 3. **Sem Animações**: Modelos animados não têm suporte atualmente
 4. **Sem Texturas**: Renderização apenas com cor baseada em normas
@@ -121,7 +121,7 @@ struct SceneObject {
 ## Próximos Passos
 
 Para melhorar o sistema:
-1. Implementar parser GLTF completo com biblioteca tiny_gltf
+1. Implementar parser GLB mais robusto com suporte a modelos complexos
 2. Integrar motor de física (Bullet ou similar)
 3. Adicionar suporte a texturas e materiais
 4. Implementar LOD (Level of Detail) para otimização

@@ -65,7 +65,7 @@ class BuildSystem:
                 print(f"  [!] Missing: {name} at {path}")
                 missing.append(name)
             else:
-                print(f"  [✓] Found: {name}")
+                print(f"  [OK] Found: {name}")
         
         if missing:
             print(f"\n[ERROR] Missing {len(missing)} dependencies!")
