@@ -628,11 +628,12 @@ public:
         // Sun orbit - follows player position, rotates around player
         float sunAngle = time * 0.5f;
         // TO ADJUST SUN DISTANCE: Change value below (smaller = closer to player)
-        float sunDistance = 35.0f;  // Distance in world units from player
+        float sunDistance = 180.0f;  // Distance in world units from player
+        // Orbit in the vertical plane (Y-Z) so the sun moves up/down (vertical spin) instead of around the horizon.
         glm::vec3 sunPos = playerPos + glm::vec3(
-            cos(sunAngle) * sunDistance,
-            20.0f + sin(time * 0.3f) * 10.0f,
-            sin(sunAngle) * sunDistance
+            0.0f,
+            20.0f + cos(sunAngle) * sunDistance,   // vertical oscillation (Y)
+            sin(sunAngle) * sunDistance            // depth oscillation (Z)
         );
         
         // Log sun position every 2 seconds
@@ -653,8 +654,13 @@ public:
         
         // Create billboard matrix - make sun face camera
         glm::vec3 toCamera = glm::normalize(camera.position - sunPos);
-        glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), toCamera));
+        
+        // Use a fixed right vector (X axis) since orbit is in Y-Z plane
+        // This prevents flipping when crossing zenith/nadir
+        glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
         glm::vec3 up = glm::normalize(glm::cross(toCamera, right));
+        // Recalculate right to ensure orthogonality
+        right = glm::normalize(glm::cross(up, toCamera));
         
         glm::mat4 sunModel = glm::mat4(
             glm::vec4(right, 0.0f),
@@ -696,11 +702,12 @@ public:
         // Moon orbit - opposite side of sun
         float moonAngle = time * 0.5f + 3.14159f;
         // TO ADJUST MOON DISTANCE: Change value below (smaller = closer to player)
-        float moonDistance = 35.0f;  // Distance in world units from player
+        float moonDistance = 180.0f;  // Distance in world units from player
+        // Orbit in the vertical plane (Y-Z) so the moon moves up/down (vertical spin) instead of around the horizon.
         glm::vec3 moonPos = playerPos + glm::vec3(
-            cos(moonAngle) * moonDistance,
-            25.0f + sin(time * 0.25f) * 10.0f,  // Increased to 25.0f to be higher in sky
-            sin(moonAngle) * moonDistance
+            0.0f,
+            25.0f + cos(moonAngle) * moonDistance,   // vertical oscillation (Y)
+            sin(moonAngle) * moonDistance            // depth oscillation (Z)
         );
         
         float playerToMoonDist = glm::distance(playerPos, moonPos);
@@ -714,8 +721,13 @@ public:
         
         // Create billboard matrix for moon - make moon face camera
         glm::vec3 moonToCamera = glm::normalize(camera.position - moonPos);
-        glm::vec3 moonRight = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), moonToCamera));
+        
+        // Use a fixed right vector (X axis) since orbit is in Y-Z plane
+        // This prevents flipping when crossing zenith/nadir
+        glm::vec3 moonRight = glm::vec3(1.0f, 0.0f, 0.0f);
         glm::vec3 moonUp = glm::normalize(glm::cross(moonToCamera, moonRight));
+        // Recalculate right to ensure orthogonality
+        moonRight = glm::normalize(glm::cross(moonUp, moonToCamera));
         
         glm::mat4 moonModel = glm::mat4(
             glm::vec4(moonRight, 0.0f),
